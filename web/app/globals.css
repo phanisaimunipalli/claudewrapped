@@ -56,3 +56,50 @@ input[type="range"]::-moz-range-thumb {
   border: 2px solid #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
+
+/* Landing split layout */
+.landing-wrap {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 48px;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 24px 60px;
+}
+
+@media (min-width: 880px) {
+  .landing-wrap {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    padding: 0 48px;
+    min-height: calc(100vh - 56px);
+  }
+}
+
+.landing-left {
+  width: 100%;
+  max-width: 460px;
+  flex-shrink: 0;
+}
+
+.landing-right {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.card-float {
+  animation: float 5s ease-in-out infinite;
+}

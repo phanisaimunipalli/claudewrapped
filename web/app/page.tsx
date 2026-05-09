@@ -69,63 +69,151 @@ function buildCaption(stats: Stats): string {
   ].join("\n");
 }
 
+// ─── Copy command ─────────────────────────────────────────────────────────────
+
+const CLI_CMD = "npx github:phanisaimunipalli/claudewrapped";
+
+function CopyCommand() {
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(CLI_CMD);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      background: C.codeBg, borderRadius: 10,
+      border: `1px solid ${C.creamBorder}`,
+      padding: "11px 14px", gap: 12,
+    }}>
+      <span style={{ fontFamily: "monospace", fontSize: 13, color: C.textPrimary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <span style={{ color: C.textMuted }}>$ </span>
+        <span style={{ color: C.accent, fontWeight: 600 }}>{CLI_CMD}</span>
+      </span>
+      <button
+        onClick={copy}
+        style={{
+          display: "flex", alignItems: "center", gap: 5,
+          padding: "5px 12px", borderRadius: 7, flexShrink: 0,
+          background: copied ? hexToRgba(C.accent, 0.12) : C.white,
+          border: `1px solid ${copied ? hexToRgba(C.accent, 0.3) : C.creamBorder}`,
+          color: copied ? C.accent : C.textSecond,
+          fontSize: 11, fontWeight: 700, cursor: "pointer",
+          fontFamily: SANS, transition: "all 0.15s",
+        }}
+      >
+        {copied ? (
+          <>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Copied
+          </>
+        ) : (
+          <>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy
+          </>
+        )}
+      </button>
+    </div>
+  );
+}
+
+function CopyCommandDark() {
+  const [copied, setCopied] = useState(false);
+  function copy() {
+    navigator.clipboard.writeText(CLI_CMD);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+  return (
+    <button
+      onClick={copy}
+      style={{
+        display: "flex", alignItems: "center", gap: 5,
+        padding: "4px 10px", borderRadius: 6, flexShrink: 0,
+        background: copied ? hexToRgba(C.accent, 0.15) : "rgba(255,255,255,0.08)",
+        border: `1px solid ${copied ? hexToRgba(C.accent, 0.3) : "rgba(255,255,255,0.12)"}`,
+        color: copied ? C.accent : "rgba(240,234,224,0.6)",
+        fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: SANS,
+        transition: "all 0.15s",
+      }}
+    >
+      {copied ? (
+        <>
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Copied
+        </>
+      ) : (
+        <>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy
+        </>
+      )}
+    </button>
+  );
+}
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
-function Navbar({ hasStats, onReset }: { hasStats: boolean; onReset: () => void }) {
+const GH_ICON = (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+  </svg>
+);
+
+function Navbar({ hasStats, onReset, dark }: { hasStats: boolean; onReset: () => void; dark?: boolean }) {
+  const navBg      = dark ? "rgba(7,6,10,0.80)"          : C.cream;
+  const navBorder  = dark ? "rgba(255,255,255,0.07)"      : C.creamBorder;
+  const logoColor  = dark ? "rgba(240,234,224,0.95)"      : C.textPrimary;
+  const linkColor  = dark ? "rgba(240,234,224,0.45)"      : C.textMuted;
+  const btnBg      = dark ? "rgba(255,255,255,0.06)"      : C.white;
+  const btnBorder  = dark ? "rgba(255,255,255,0.12)"      : C.creamBorder;
+  const btnColor   = dark ? "rgba(240,234,224,0.7)"       : C.textSecond;
+
   return (
     <nav style={{
       position: "sticky", top: 0, zIndex: 100,
-      background: C.cream,
-      borderBottom: `1px solid ${C.creamBorder}`,
+      background: navBg,
+      backdropFilter: dark ? "blur(16px)" : undefined,
+      WebkitBackdropFilter: dark ? "blur(16px)" : undefined,
+      borderBottom: `1px solid ${navBorder}`,
       display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 24px", height: 56,
+      padding: "0 28px", height: 56,
       fontFamily: SANS,
     }}>
-      {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: C.accent, fontSize: 14, lineHeight: 1 }}>✦</span>
-        <span style={{
-          color: C.textPrimary, fontSize: 15, fontWeight: 700,
-          letterSpacing: "-0.01em",
-        }}>
+        <span style={{ color: C.accent, fontSize: 14 }}>✦</span>
+        <span style={{ color: logoColor, fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em" }}>
           Claude Wrapped
         </span>
       </div>
 
-      {/* Right side */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {/* GitHub */}
-        <a
-          href="https://github.com/phanisaimunipalli/claudewrapped"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "flex", alignItems: "center", gap: 6,
-            color: C.textMuted, fontSize: 12, fontWeight: 600,
-            textDecoration: "none", padding: "6px 10px",
-            borderRadius: 8, transition: "color 0.15s",
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-          GitHub
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <a href="https://github.com/phanisaimunipalli/claudewrapped" target="_blank" rel="noopener noreferrer"
+          style={{ display: "flex", alignItems: "center", gap: 5, color: linkColor, fontSize: 12, fontWeight: 600, textDecoration: "none", padding: "6px 10px", borderRadius: 8 }}>
+          {GH_ICON} GitHub
         </a>
-
-        {/* Upload another — shown when viewing a card */}
         {hasStats && (
-          <button
-            onClick={onReset}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "7px 14px", borderRadius: 8,
-              background: C.white, border: `1px solid ${C.creamBorder}`,
-              color: C.textSecond, fontSize: 12, fontWeight: 600,
-              cursor: "pointer", fontFamily: SANS,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-              transition: "border-color 0.15s",
-            }}
-          >
+          <button onClick={onReset} style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "7px 14px", borderRadius: 8,
+            background: btnBg, border: `1px solid ${btnBorder}`,
+            color: btnColor, fontSize: 12, fontWeight: 600,
+            cursor: "pointer", fontFamily: SANS, transition: "all 0.15s",
+          }}>
             ↑ Upload another
           </button>
         )}
@@ -136,40 +224,24 @@ function Navbar({ hasStats, onReset }: { hasStats: boolean; onReset: () => void 
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
-function Footer() {
-  return (
-    <footer style={{
-      background: C.creamDark,
-      borderTop: `1px solid ${C.creamBorder}`,
-      padding: "24px 24px",
-      fontFamily: SANS,
-    }}>
-      <div style={{
-        maxWidth: 900, margin: "0 auto",
-        display: "flex", flexWrap: "wrap",
-        alignItems: "center", justifyContent: "space-between",
-        gap: 12,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ color: C.accent, fontSize: 12 }}>✦</span>
-          <span style={{ color: C.textSecond, fontSize: 12, fontWeight: 600 }}>claudewrapped.dev</span>
-        </div>
+function Footer({ dark }: { dark?: boolean }) {
+  const bg     = dark ? "rgba(255,255,255,0.03)"  : C.creamDark;
+  const border = dark ? "rgba(255,255,255,0.07)"  : C.creamBorder;
+  const text1  = dark ? "rgba(240,234,224,0.35)"  : C.textSecond;
+  const text2  = dark ? "rgba(240,234,224,0.22)"  : C.textMuted;
 
+  return (
+    <footer style={{ background: bg, borderTop: `1px solid ${border}`, padding: "20px 28px", fontFamily: SANS }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ color: C.accent, fontSize: 11 }}>✦</span>
+          <span style={{ color: text1, fontSize: 11, fontWeight: 600 }}>claudewrapped.dev</span>
+        </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-          <span style={{ color: C.textMuted, fontSize: 11 }}>
-            No data leaves your browser
-          </span>
-          <span style={{ color: C.textMuted, fontSize: 11 }}>
-            Built with Claude Code
-          </span>
-          <a
-            href="https://github.com/phanisaimunipalli/claudewrapped"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: C.textMuted, fontSize: 11, textDecoration: "none", fontWeight: 600 }}
-          >
-            GitHub ↗
-          </a>
+          <span style={{ color: text2, fontSize: 11 }}>No data leaves your browser</span>
+          <span style={{ color: text2, fontSize: 11 }}>Built with Claude Code</span>
+          <a href="https://github.com/phanisaimunipalli/claudewrapped" target="_blank" rel="noopener noreferrer"
+            style={{ color: text2, fontSize: 11, textDecoration: "none", fontWeight: 600 }}>GitHub ↗</a>
         </div>
       </div>
     </footer>
@@ -726,118 +798,178 @@ export default function Home() {
 
   // ── Upload screen ───────────────────────────────────────────────────────────
 
+  const DEMO_STATS = {
+    generated_at: new Date().toISOString(),
+    total_sessions: 120, total_prompts: 2990,
+    total_tokens: 275_300_000, total_output_tokens: 180_000_000,
+    pages_written: 847,
+    first_session: "2025-01-15T09:00:00Z",
+    last_session: new Date().toISOString(),
+    days_active: 114, days_used: 18, avg_prompts_per_day: 166,
+    cache_efficiency_pct: 95, streak_current_days: 3, streak_longest_days: 5,
+    peak_hour: 21, peak_day: "Sat", night_owl_pct: 35, weekend_warrior: true,
+    topics: { code: 45, ai: 30, research: 15, planning: 7, writing: 3 },
+    top_projects: [], hour_distribution: [], day_distribution: {},
+    persona: "The Deep Diver",
+  };
+  const DEMO_THEME = BASE_THEMES[0];
+  const DEMO_FRAME = frameCss("aurora", DEMO_THEME.accent);
+
+  // Subtle warm page gradient — Anthropic cream with very faint accent bloom top-right
+  const pageBg = [
+    `radial-gradient(ellipse 55% 45% at 100% 0%, ${hexToRgba(C.accent, 0.07)} 0%, transparent 60%)`,
+    `radial-gradient(ellipse 40% 35% at 0% 80%, rgba(139,92,246,0.04) 0%, transparent 55%)`,
+    C.cream,
+  ].join(",");
+
+  // Apple-style card shadow — layered for depth
+  const appleShadow = "0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.07)";
+
   return (
     <div style={{ minHeight: "100vh", background: C.cream, display: "flex", flexDirection: "column" }}>
       <Navbar hasStats={false} onReset={() => {}} />
 
-      <main style={{
-        flex: 1,
-        display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "center", padding: "60px 16px 80px",
-      }}>
-        {/* Hero */}
-        <div style={{ width: "100%", maxWidth: 480, textAlign: "center", marginBottom: 48 }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 7,
-            background: hexToRgba(C.accent, 0.08), border: `1px solid ${hexToRgba(C.accent, 0.18)}`,
-            borderRadius: 999, padding: "5px 14px", marginBottom: 20,
-          }}>
-            <span style={{ color: C.accent, fontSize: 11 }}>✦</span>
-            <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: SANS }}>
-              Claude Wrapped
-            </span>
-          </div>
-          <h1 style={{
-            fontFamily: SERIF, fontStyle: "italic",
-            fontSize: 42, fontWeight: 600, color: C.textPrimary,
-            letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: 16,
-          }}>
-            Your Claude Code,<br />beautifully wrapped.
-          </h1>
-          <p style={{ color: C.textSecond, fontSize: 15, lineHeight: 1.6, maxWidth: 360, margin: "0 auto", fontFamily: SANS }}>
-            Generate a shareable scorecard from your local Claude usage. No account needed.
-          </p>
-        </div>
+      <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: pageBg }}>
+        <div className="landing-wrap">
 
-        {/* Steps */}
-        <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 12 }}>
-          {/* Step 1 */}
-          <div style={{
-            background: C.white, border: `1px solid ${C.creamBorder}`,
-            borderRadius: 16, padding: "20px 24px", boxShadow: C.shadow,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-              <div style={{
-                width: 24, height: 24, borderRadius: "50%",
-                background: hexToRgba(C.accent, 0.1), border: `1px solid ${hexToRgba(C.accent, 0.2)}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: C.accent, fontSize: 11, fontWeight: 700, flexShrink: 0,
-              }}>1</div>
-              <p style={{ color: C.textSecond, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: SANS }}>
-                Generate your stats
-              </p>
-            </div>
+          {/* ── LEFT: content ── */}
+          <div className="landing-left">
+
+            {/* Eyebrow badge */}
             <div style={{
-              background: C.codeBg, borderRadius: 10,
-              padding: "12px 16px", border: `1px solid ${C.creamBorder}`,
-              fontFamily: "monospace", fontSize: 14,
+              display: "inline-flex", alignItems: "center", gap: 7,
+              background: hexToRgba(C.accent, 0.09), border: `1px solid ${hexToRgba(C.accent, 0.2)}`,
+              borderRadius: 999, padding: "5px 14px", marginBottom: 22,
             }}>
-              <span style={{ color: C.textMuted }}>$ </span>
-              <span style={{ color: C.accent, fontWeight: 600 }}>npx claudewrapped</span>
+              <span style={{ color: C.accent, fontSize: 11 }}>✦</span>
+              <span style={{ color: C.accent, fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: SANS }}>
+                Claude Wrapped
+              </span>
             </div>
-            <p style={{ color: C.textMuted, fontSize: 11, marginTop: 10, lineHeight: 1.6, fontFamily: SANS }}>
-              Reads <code style={{ background: C.codeBg, padding: "1px 5px", borderRadius: 4 }}>~/.claude/</code> locally.
-              Outputs <code style={{ background: C.codeBg, padding: "1px 5px", borderRadius: 4 }}>claude-stats.json</code>. Nothing is uploaded.
+
+            {/* Headline */}
+            <h1 style={{
+              fontFamily: SERIF, fontSize: 48, fontWeight: 700,
+              color: C.textPrimary, letterSpacing: "-0.03em", lineHeight: 1.1,
+              marginBottom: 16,
+            }}>
+              Your Claude Code,{" "}
+              <span style={{ fontStyle: "italic", color: C.accent }}>beautifully</span>
+              <br />wrapped.
+            </h1>
+
+            <p style={{ color: C.textSecond, fontSize: 15, lineHeight: 1.65, marginBottom: 32, fontFamily: SANS, maxWidth: 380 }}>
+              One command generates your stats. Upload the file. Get a shareable card.
+            </p>
+
+            {/* Step 1 — terminal */}
+            <div style={{
+              background: C.white,
+              border: `1px solid ${C.creamBorder}`,
+              borderRadius: 16, padding: "16px 18px", marginBottom: 10,
+              boxShadow: appleShadow,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: hexToRgba(C.accent, 0.1), border: `1px solid ${hexToRgba(C.accent, 0.22)}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: C.accent, fontSize: 11, fontWeight: 800, flexShrink: 0,
+                }}>1</div>
+                <span style={{ color: C.textMuted, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: SANS }}>
+                  Run in terminal
+                </span>
+              </div>
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+                background: C.codeBg, border: `1px solid ${C.creamBorder}`,
+                borderRadius: 10, padding: "10px 14px",
+              }}>
+                <span style={{ fontFamily: "monospace", fontSize: 13, color: C.textPrimary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <span style={{ color: C.textMuted }}>$ </span>
+                  <span style={{ color: C.accent, fontWeight: 600 }}>{CLI_CMD}</span>
+                </span>
+                <CopyCommand />
+              </div>
+            </div>
+
+            {/* Step 2 — drop zone */}
+            <div style={{
+              background: C.white,
+              border: `1px solid ${C.creamBorder}`,
+              borderRadius: 16, padding: "16px 18px",
+              boxShadow: appleShadow,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: hexToRgba(C.accent, 0.1), border: `1px solid ${hexToRgba(C.accent, 0.22)}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: C.accent, fontSize: 11, fontWeight: 800, flexShrink: 0,
+                }}>2</div>
+                <span style={{ color: C.textMuted, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: SANS }}>
+                  Upload your file
+                </span>
+              </div>
+              <div
+                onDrop={onDrop}
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onClick={() => document.getElementById("fileInput")?.click()}
+                style={{
+                  border: `2px dashed ${dragging ? C.accent : C.creamBorder}`,
+                  borderRadius: 12, padding: "24px 16px", textAlign: "center",
+                  background: dragging ? hexToRgba(C.accent, 0.05) : C.creamMuted,
+                  cursor: "pointer", transition: "all 0.18s",
+                }}
+              >
+                <input id="fileInput" type="file" accept=".json" style={{ display: "none" }}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) parseFile(f); }} />
+                <div style={{ fontSize: 22, marginBottom: 7, opacity: 0.45 }}>{dragging ? "✦" : "↑"}</div>
+                <p style={{ color: C.textPrimary, fontWeight: 700, fontSize: 13, marginBottom: 3, fontFamily: SANS }}>
+                  {dragging ? "Drop it!" : "Drop claude-stats.json here"}
+                </p>
+                <p style={{ color: C.textMuted, fontSize: 11, fontFamily: SANS }}>or click to browse</p>
+              </div>
+              {error && <p style={{ color: "#C0392B", fontSize: 12, marginTop: 8, fontFamily: SANS }}>{error}</p>}
+            </div>
+
+            <p style={{ color: C.textMuted, fontSize: 11, marginTop: 14, fontFamily: SANS }}>
+              No server · No account · Nothing uploaded · 100% local
             </p>
           </div>
 
-          {/* Step 2 — drop zone */}
-          <div style={{
-            background: C.white, border: `1px solid ${C.creamBorder}`,
-            borderRadius: 16, padding: "20px 24px", boxShadow: C.shadow,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+          {/* ── RIGHT: floating demo card ── */}
+          <div className="landing-right">
+            <div className="card-float" style={{ width: "100%", maxWidth: 400, position: "relative" }}>
+              {/* Warm glow beneath */}
               <div style={{
-                width: 24, height: 24, borderRadius: "50%",
-                background: hexToRgba(C.accent, 0.1), border: `1px solid ${hexToRgba(C.accent, 0.2)}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: C.accent, fontSize: 11, fontWeight: 700, flexShrink: 0,
-              }}>2</div>
-              <p style={{ color: C.textSecond, fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: SANS }}>
-                Upload your file
+                position: "absolute", bottom: -24, left: "12%", right: "12%", height: 48,
+                background: `radial-gradient(ellipse at 50% 100%, ${hexToRgba(C.accent, 0.28)} 0%, transparent 70%)`,
+                filter: "blur(18px)",
+                pointerEvents: "none",
+              }} />
+
+              {/* Aurora frame — slightly lifted with a clean cream-friendly shadow */}
+              <div style={{
+                background: DEMO_FRAME,
+                borderRadius: 24,
+                padding: "28px 18px",
+                display: "flex", justifyContent: "center", alignItems: "center",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.12), 0 32px 72px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04)",
+                position: "relative",
+              }}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                <StatsCard stats={DEMO_STATS as any} theme={DEMO_THEME} />
+              </div>
+
+              <p style={{ color: C.textMuted, fontSize: 11, textAlign: "center", marginTop: 14, fontFamily: SANS }}>
+                14 backgrounds · 6 themes · custom accent color
               </p>
             </div>
-
-            <div
-              onDrop={onDrop}
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onClick={() => document.getElementById("fileInput")?.click()}
-              style={{
-                border: `2px dashed ${dragging ? C.accent : C.creamBorder}`,
-                borderRadius: 12, padding: "32px 20px", textAlign: "center",
-                background: dragging ? hexToRgba(C.accent, 0.04) : C.creamMuted,
-                cursor: "pointer", transition: "border-color 0.2s, background 0.2s",
-              }}
-            >
-              <input id="fileInput" type="file" accept=".json" style={{ display: "none" }}
-                onChange={(e) => { const f = e.target.files?.[0]; if (f) parseFile(f); }} />
-              <div style={{ fontSize: 24, marginBottom: 8, opacity: 0.6 }}>{dragging ? "✦" : "↑"}</div>
-              <p style={{ color: C.textPrimary, fontWeight: 700, fontSize: 14, marginBottom: 3, fontFamily: SANS }}>
-                {dragging ? "Drop it!" : "Drop claude-stats.json here"}
-              </p>
-              <p style={{ color: C.textMuted, fontSize: 12, fontFamily: SANS }}>or click to browse</p>
-            </div>
-
-            {error && (
-              <p style={{ color: "#DC2626", fontSize: 12, marginTop: 10, fontFamily: SANS }}>{error}</p>
-            )}
           </div>
-        </div>
 
-        <p style={{ color: C.textMuted, fontSize: 11, marginTop: 24, fontFamily: SANS }}>
-          No server. No account. No tracking. 100% local.
-        </p>
+        </div>
       </main>
 
       <Footer />
