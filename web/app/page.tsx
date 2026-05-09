@@ -65,7 +65,7 @@ function buildCaption(stats: Stats): string {
     `Peak: ${peakLabel} on ${stats.peak_day}s · ${stats.streak_longest_days}-day streak`,
     `Mostly ${TOPIC_EMOJI[topTopic?.[0]] ?? ""} ${topTopic?.[0]} (${topTopic?.[1]}%)`,
     ``,
-    `Get yours → claudewrapped.dev`,
+    `Get yours → claudewrapped.vercel.app`,
   ].join("\n");
 }
 

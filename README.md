@@ -35,7 +35,7 @@ Claude Wrapped reads your `~/.claude/` directory — the same files Claude Code 
 - **Top projects** by message volume
 - **Cache efficiency**, night owl %, weekend warrior flag
 
-Upload the JSON to **[claudewrapped.dev](https://claudewrapped.dev)** to get your card.
+Upload the JSON to **[claudewrapped.vercel.app](https://claudewrapped.vercel.app)** to get your card.
 
 ---
 
@@ -61,12 +61,12 @@ Outputs `claude-stats.json` in your current directory. Takes ~2 seconds.
   Peak:       21:00 on Sats
 
   Saved → /Users/you/claude-stats.json
-  Upload at claudewrapped.dev to get your card
+  Upload at claudewrapped.vercel.app to get your card
 ```
 
 **Step 2 — Get your card**
 
-Go to **[claudewrapped.dev](https://claudewrapped.dev)** and drop in the file.
+Go to **[claudewrapped.vercel.app](https://claudewrapped.vercel.app)** and drop in the file.
 
 **Step 3 — Customize and share**
 
@@ -158,7 +158,7 @@ npm run dev
 
 <br />
 
-Built with Claude Code &nbsp;·&nbsp; [claudewrapped.dev](https://claudewrapped.dev)
+Built with Claude Code &nbsp;·&nbsp; [claudewrapped.vercel.app](https://claudewrapped.vercel.app)
 
 <br />
 
