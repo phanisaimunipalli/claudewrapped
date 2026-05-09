@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+web/node_modules/
+
+# Next.js build output
+web/.next/
+web/out/
+web/build/
+
+# Build artifacts
+web/tsconfig.tsbuildinfo
+web/next-env.d.ts
+
+# Generated CLI output (never commit personal stats)
+cli/claude-stats.json
+claude-stats.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.local
+.env*.local
+
+# Editor
+.vscode/
+.idea/

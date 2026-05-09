@@ -1,0 +1,16 @@
+{
+  "name": "claudewrapped",
+  "version": "1.0.0",
+  "description": "Generate your Claude Code usage scorecard",
+  "bin": {
+    "claudewrapped": "./cli/generate.js"
+  },
+  "scripts": {
+    "start": "node cli/generate.js"
+  },
+  "keywords": ["claude", "anthropic", "claude-code", "stats", "wrapped"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}
