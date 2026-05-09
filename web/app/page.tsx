@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, CSSProperties } from "react";
+import { useState, useCallback, useRef, useEffect, CSSProperties } from "react";
 import dynamic from "next/dynamic";
 import { toPng } from "html-to-image";
 import { CardTheme } from "../components/StatsCard";
@@ -269,7 +269,7 @@ function Navbar({ hasStats, onReset, dark }: { hasStats: boolean; onReset: () =>
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
-function Footer({ dark }: { dark?: boolean }) {
+function Footer({ dark, cardCount }: { dark?: boolean; cardCount?: number | null }) {
   const bg     = dark ? "rgba(255,255,255,0.03)"  : C.creamDark;
   const border = dark ? "rgba(255,255,255,0.07)"  : C.creamBorder;
   const text1  = dark ? "rgba(240,234,224,0.35)"  : C.textSecond;
@@ -280,10 +280,15 @@ function Footer({ dark }: { dark?: boolean }) {
       <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ color: C.accent, fontSize: 11 }}>✦</span>
-          <span style={{ color: text1, fontSize: 11, fontWeight: 600 }}>claudewrapped.dev</span>
+          <span style={{ color: text1, fontSize: 11, fontWeight: 600 }}>claudewrapped.vercel.app</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-          <span style={{ color: text2, fontSize: 11 }}>No data leaves your browser</span>
+          {cardCount != null && cardCount > 0 && (
+            <span style={{ color: text2, fontSize: 11 }}>
+              <span style={{ color: C.accent, fontWeight: 700 }}>{cardCount.toLocaleString()}</span> cards generated
+            </span>
+          )}
+          <span style={{ color: text2, fontSize: 11 }}>No stats data leaves your browser</span>
           <span style={{ color: text2, fontSize: 11 }}>Built with Claude Code</span>
           <a href="https://github.com/phanisaimunipalli/claudewrapped" target="_blank" rel="noopener noreferrer"
             style={{ color: text2, fontSize: 11, textDecoration: "none", fontWeight: 600 }}>GitHub ↗</a>
@@ -554,6 +559,11 @@ export default function Home() {
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [threadsTip, setThreadsTip] = useState(false);
+  const [cardCount, setCardCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/count").then((r) => r.json()).then((d) => setCardCount(d.count)).catch(() => {});
+  }, []);
 
   const [activeThemeId, setActiveThemeId] = useState("claude-dark");
   const [activeFrameId, setActiveFrameId] = useState("aurora");
@@ -580,6 +590,8 @@ export default function Home() {
           return;
         }
         setStats(json);
+        fetch("/api/count", { method: "POST" })
+          .then((r) => r.json()).then((d) => setCardCount(d.count)).catch(() => {});
       } catch {
         setError("Couldn't parse that file. Make sure it's the JSON from npx claudewrapped.");
       }
@@ -836,7 +848,7 @@ export default function Home() {
           </div>
         </main>
 
-        <Footer />
+        <Footer cardCount={cardCount} />
       </div>
     );
   }
