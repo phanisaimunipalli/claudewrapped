@@ -17,13 +17,33 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://claudewrapped.vercel.app"),
   title: "Claude Wrapped — Your Claude Code Scorecard",
   description:
-    "Generate a beautiful scorecard of your Claude Code usage. Upload your stats file and share on Threads, Twitter, or LinkedIn.",
+    "See your Claude Code persona, total tokens, prompt frequency, peak hours, and streaks — then share a beautiful card. One command. Runs 100% locally.",
+  keywords: [
+    "Claude Code", "Claude Code stats", "Anthropic Claude", "Claude Code usage",
+    "Claude wrapped", "Claude Code analytics", "Claude Code scorecard", "developer stats",
+  ],
+  authors: [{ name: "Phani Sai Ram Munipalli" }],
   openGraph: {
-    title: "Claude Wrapped",
-    description: "Your Claude Code usage, beautifully visualized.",
+    title: "Claude Wrapped — Your Claude Code Scorecard",
+    description:
+      "See your Claude Code persona, tokens, streak, and peak hours. Generate a shareable card in seconds.",
+    url: "https://claudewrapped.vercel.app",
+    siteName: "Claude Wrapped",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Claude Wrapped — Your Claude Code Scorecard",
+    description:
+      "See your Claude Code persona, tokens, streak, and peak hours. Generate a shareable card in seconds.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
