@@ -217,7 +217,7 @@ function generate() {
   console.log("  Streak:     " + streaks.longest + " days best");
   console.log("  Peak:       " + peakHour + ":00 on " + peakDay + "s");
   console.log("\n  Saved → " + outPath);
-  console.log("  Upload at claudewrapped.dev to get your card\n");
+  console.log("  Upload at https://claudewrapped.vercel.app to get your card\n");
 }
 
 generate();
