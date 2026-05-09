@@ -166,6 +166,51 @@ function CopyCommandDark() {
   );
 }
 
+function TerminalCommand() {
+  const [copied, setCopied] = useState(false);
+  function copy() {
+    navigator.clipboard.writeText(CLI_CMD);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+  return (
+    <div style={{
+      position: "relative",
+      background: C.codeBg, border: `1px solid ${C.creamBorder}`,
+      borderRadius: 10, padding: "12px 44px 12px 14px",
+    }}>
+      <span style={{ fontFamily: "monospace", fontSize: 13, color: C.textPrimary, display: "block", wordBreak: "break-all" }}>
+        <span style={{ color: C.textMuted }}>$ </span>
+        <span style={{ color: C.accent, fontWeight: 600 }}>{CLI_CMD}</span>
+      </span>
+      <button
+        onClick={copy}
+        title={copied ? "Copied!" : "Copy"}
+        style={{
+          position: "absolute", top: 8, right: 8,
+          width: 28, height: 28, borderRadius: 7,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: copied ? hexToRgba(C.accent, 0.12) : C.white,
+          border: `1px solid ${copied ? hexToRgba(C.accent, 0.25) : C.creamBorder}`,
+          color: copied ? C.accent : C.textMuted,
+          cursor: "pointer", transition: "all 0.15s", flexShrink: 0,
+        }}
+      >
+        {copied ? (
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ) : (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        )}
+      </button>
+    </div>
+  );
+}
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 const GH_ICON = (
@@ -880,17 +925,7 @@ export default function Home() {
                   Run in terminal
                 </span>
               </div>
-              <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
-                background: C.codeBg, border: `1px solid ${C.creamBorder}`,
-                borderRadius: 10, padding: "10px 14px",
-              }}>
-                <span style={{ fontFamily: "monospace", fontSize: 13, color: C.textPrimary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  <span style={{ color: C.textMuted }}>$ </span>
-                  <span style={{ color: C.accent, fontWeight: 600 }}>{CLI_CMD}</span>
-                </span>
-                <CopyCommand />
-              </div>
+              <TerminalCommand />
             </div>
 
             {/* Step 2 — drop zone */}
