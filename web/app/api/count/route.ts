@@ -1,14 +1,15 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 
+const redis = Redis.fromEnv();
 const KEY = "cards_generated";
 
 export async function GET() {
-  const count = (await kv.get<number>(KEY)) ?? 0;
+  const count = (await redis.get<number>(KEY)) ?? 0;
   return NextResponse.json({ count });
 }
 
 export async function POST() {
-  const count = await kv.incr(KEY);
+  const count = await redis.incr(KEY);
   return NextResponse.json({ count });
 }
